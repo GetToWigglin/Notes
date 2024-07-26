@@ -4,6 +4,45 @@ https – hyper text transport protocol secure, this is a form of http communica
 Symmetric Key Encryption – The same key is used to encrypt and decrypt information. It’s faster, more compact, and more efficient, but it only provides confidentiality.
 Asymmetric Key Encryption – Different keys are used for encryption and decryption. More complicated and more overhead but allows for authentication and non-repudiation as well as confidentiality.
 
+## Git
+Commands
+`git log --fork-point / git log HEAD --root`
+These commands will give the logs of all commits from the fork-point that are DIFFERENT from the upstream. Rebase specifically uses these commits, so you can visualize exactly what commits will be appended via rebase
+	
+`git rebase`
+
+Step by Step
+1. If git rebase <branch>, git will switch to the branch specified, otherwise it uses the current branch.
+2. If git rebase <upstream> is not used, the current branch's upstream (configured in branch.<name>.remote/merge) will be used as the fork-point.
+3. All commits NOT in the upstream are saved in a temporary area.
+4. Current branch is hard reset to the upstream/fork-point (--onto can specify the "reset point").
+5. New commits in the temporary area are reapplied, one by one, and in order (Any commits that have identical changes but different "metadata" are omitted).
+6. You may have to resolve merge conflicts as each commit is applied
+
+git rebase master topic / git rebase master (You are currently on branch topic)
+1. Switch to master and hard reset to fork-point
+2. Apply each commit in topic to master in order, resolving conflicts
+3. Now you are on master + topic
+4. "Rename" current branch (master) to topic, and now this branch is topic
+
+Use Case: My branch is forked from topic, which is forked from master, I need updates in master that are not in topic. (This is the Use Case I've been doing using cherry-pick to work ahead and change my fork-point for PRs)
+`git rebase --onto master topic mine` (--onto specifies the starting point to insert the commits)
+Summary: This will update the forkpoint for mine to master as if I originally branched from master
+	
+What is the difference here?
+master->topic->mine
+`git rebase master mine`
+`git rebase --onto master topic mine`
+
+I'm pretty sure these two commands will do the same thing in this context.
+1. If topic and mine have diverged, then only up to the divergence will be preserved
+2. If topic is merged into master and mine is rebased off of master, git will skip textually identical commits
+3. If topic merged as a squash commit into master, then you will "duplicate" the commits
+4. This is similar to the "upstream rebase" problem. Using the above example, if topic is rebased on master including new changes in master it will cause problems for mine. When I try to merge mine back into topic, all the shared commits in topic will then be duplicated by the merge.
+
+`git mv source destination`
+This command will move a file from a source to the destination and will update the index after completion. This command was super useful to me in forcing git to recognize a filename change that only changes capitalization:
+
 ## Encryption
 The Process
 1.	Server and Client agree on the version of protocol to use
