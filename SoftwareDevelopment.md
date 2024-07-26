@@ -28,16 +28,278 @@ Discrepancy between internal updating and external updating. Seems like they wan
 Dependency Inversion – This concept has the establishment of interfaces for abstraction such that instead of having parents referencing children, the children and parents both reference common interfaces, thus keeping the classes decoupled. This results in a sort of “inverted” compile time dependency, while still maintaining the linear direction of run-time execution.
 The design of Https is that the server (listener/responder) hosts the certificate and sends it to the client (requester).
 
-Windows + shift + s – Screen shot snipper tool
-Debt to Income Ratio – Total Income / Total Debt
-In order for AMD and AMDServices to communicate, they need to be using the same ports for communication.
-1.	Right click AmdOrderEditor.Api and select properties
-2.	Debug -> Open debug launch profiles UI
-3.	URLs are set at the bottom of the window
-findstr /c:"StageBurnOutDetected" *.json
+### Dependency Injection
+Constructor Over-Injection
+This is an anti-pattern in which dependencies are injected every time through constructor regardless if they are used all the time. 
 
-Aggregate Initialization – If you use aggregate initialization (TestStruct X = { 0… }) The members will be initialized in order and any not explicitly initialized will use the empty initializer list equivalent (x{} is x with an empty initializer list). An empty initializer list performs value initialization (x() or new x() is value initialization).
-Basically what this statement is saying is "Initialize the first member of X to 0, then use the empty initializer list for all the other elements (Basically if we did X = {} or X{}). Furthermore, the empty initializer list performs value initialization. There are some instances where value initialization cannot be performed (such as references) so the syntax X = {0} is unnecessarily convoluted for default initializing an array.
+```
+Object (Deps...) {
+ deps_ = deps;
+}
+
+public Do() {
+  if (condition) {
+    return deps_.Do<Result>();
+  }
+}
+```
+
+We can trivially see that we expect SOME instances in which the dependency is NOT used. With micro service architecture, these services are supposed to be created and disposed frequently, so the greedy dependency injection can be a huge cost if the dependency has significant overhead in creation. (ISessionFactory of NHibernate, for example)
+
+Constructor injection shouts loudly "I can do NOTHING unless you give me these dependencies", and if that's not true they shouldn't be there (This is the concept of RAII/Resource Acquisition is Initialization).
+
+### Inversion of Control
+This is a design pattern in which the flow of control is from a generic framework. Very common in GUI environments, web-server application frameworks, event-driven programming Essentially providing any kind of CALLBACK, which implements and/or controls reaction istead of acting directly. Dependency Injection is a specific type of Inversion of Control (IoC) pattern.
+
+### TCP and UDP
+TCP is for precision UDP is performance. Connection based vs connectionless respectively. TCP is used for web browsing, FTP, and emails UDP is used for streaming, multiplayer games, VoIP Most of my experience is in UDP with the experimental radar. I have been working with http
+
+Proxies (Cloudflare)
+Proxies are a middleman between you and the rest of the internet if you are hosting a website/server.
+Without the proxy, you would have to provide your personal Public IP to anyone who wanted to use
+your stuff, and that is a big security risk. Interestingly, this is the same concept of using a PO
+Box for deliveries instead of providing your address to people. VPNs fulfill the same functionality 
+as a proxy, but encrypt your data as well, so they are superior in most cases.
+
+## Web Development
+Tokens - A computer generated code that acts as a digitally encoded signature of a user
+	Username:Password is a type of token
+	Certificates are another type of token
+Cookies are an alternative method of authentication. It's good practice to ensure that all API calls are asynchronous so that the server can move on to other requests.
+
+Header Accept - This HTTP header informs the server as to which MIME types the client is able to process. The Server .then uses content negotiation in order to determine which representation of data is best for the user (e.g. Should the user receive text only? Are PDF's acceptable?)
+
+Single Page Application (SPA) - This is a concept in webdevelopment where that all the content is displayed and all functionality is handled via Asynchronous Javascript and XML (AJAX) type tech. This allows for individual contents of web page to be refresehed asynchronously and requests to be handled without navigating to other pages.
+ - More responsive
+ - Greater stability
+ - Less bandwidth usage
+ - Faster development
+ - Cross platform
+	
+ - Poor scaling
+ - Security concerns
+ - SEO disadvantages
+ - Site analytics (Only a single page is being visited)
+ - Requires JavaScript
+ - Memory leaks
+
+Multi Page Application (MPA) - Not a SPA. More specifically, these involve a page load everytime information needs to be updated.
+
+Web Based Mobile App - A mobile app that's based on a web application and not a downloadable app.
+Web Apps/Native Apps/Hybrid Apps
+https://aws.amazon.com/compare/the-difference-between-web-apps-native-apps-and-hybrid-apps/
+
+## C#
+Classes in C# are considered "reference" types. When instantiating a class, it must be instantiated with the "new" keyword or else it will be initialized to "nullptr" basically. 
+
+In web development and web-page navigation, previously each individual page was stored as a file and requested when using the URL. For example, there would be a www.website.com/index.html page which would be kind of like the starting point. From there you would literally use URLs to navigate the file system on the server.
+
+### MVC
+Controller: Now the design is to no longer have web-pages represented by physical files saved, but to be generated on request. The controller serves the purpose of directing URL traffic based on the URLs instead of requesting and loading an actual file that corresponds with the URL.
+ - Controllers that derive from ControllerBase are designed to be activated and disposed on a per request basis.
+ - Controller derives from ControllerBase and is for controllers that add support for views.
+ - Deriving only from ControllerBase is intended for web APIs.
+
+_ : These are called Discards in C#
+Attributes: These are the bracket enclosed lines immediately prior to a method or class (e.g. [ApiController]). 
+
+API Controller Atribute (e.g. [ApiController])
+ - This enables various opinionated API-specific behaviors.
+ - "Opinionated" - Software that forces implementation in a certain way. It handles a lot of things for you so you cannot customize specific fine details down "in the weeds".
+
+Route Attributes (e.g. [Route(...)]):
+These attributes are convenient way to define behaviors based on the routing of the URL
+(www.page.com/route/to/action):
+With routing attributes you can add constraints and bounds checking to have very fine grained control over what actions are performed by what routes.
+
+[controller] - Indicates the name of the controller without the word Controller
+```
+[Route([controller])]
+public class LogController : ControllerBase { ... } // Route here is "Log"`
+```
+	
+[{name:type}] - This is a routing constraint and accessor example
+id - The variable you use to access the provided route
+type - The type that the variable must be
+```
+[Route("{id:int}")] // e.g.: /5
+public class LogController : ControllerBase { ... }
+system.println(id); // "5"
+```
+[HandleException] - Instructs the controller use the built in exception handling to distribute error responses. You can implement custom exception handling by overriding this attribute if it makes sense.
+	
+```
+// Create and run a new local process
+System.Diagnostics.Process process = new System.Diagnostics.Process();
+// ProcessStartInfo is a complex structure used to pass specific commands to the process being executed.
+// This is as opposed to passing a list of string arguments to the process.
+System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+// Starts the new process in the background
+startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+// Runs the cmd.exe process
+startInfo.FileName = "cmd.exe";
+// Provides string arguments for the specific process being run.
+startInfo.Arguments = "/C dotnet dev-certs https -q -t";
+// Assigns the startInfo
+process.StartInfo = startInfo;
+// Executes the process
+process.Start();
+```
+
+// Runs dotnet dev-certs https, which generates a self signed certificate to enable HTTPS use in development
+// -q|--quiet Display warnings and errors only
+// -t|--trust Trusts the certificate on the local machine. Without this, the certificate is added to the certificate store, but not to a trusted list.
+`dotnet dev-certs https -q -t`
+
+```
+// This creates custom mapping mapping these two differently named data fields together so that the mapping succeeds.
+CreateMap<JemmMelMilApiClientConfiguration, SimulationConfigurationBaseDto>()
+  .ForMember(c => c.JemmisTokenIdentifier, opt => opt.MapFrom(j => j.TokenIdentifier))
+  .ForMember(c => c.MelMilTokenIdentifier, opt => opt.MapFrom(j => j.JEMMMelMilTokenIdentifier));
+```
+
+If BackgroundServices or Singletons require scoped services within them, do not use dependency injection. Create a scope manually and resolve dependencies in that scope to have appropriate service lifetime.
+
+IEnumerable vs IQueryable
+```
+IEnumerable<Product> products = myORM.GetProducts();
+var productsOver25 = products.Where(p => p.Cost >= 25.00);
+```
+
+What happens here, is the database loads all of the products, and passes them across the wire to your program. Your program then filters the data. In essence, the database does a SELECT * FROM Products, and returns EVERY product to you.
+
+With the right IQueryable<T> provider, on the other hand, you can do:
+```
+IQueryable<Product> products = myORM.GetQueryableProducts();
+var productsOver25 = products.Where(p => p.Cost >= 25.00);
+```
+
+The code looks the same, but the difference here is that the SQL executed will be SELECT * FROM Products WHERE Cost >= 25.
+This latter code will put significantly less stress on Database access and query.
+
+LINQ
+```
+Query Expressions vs Query Operators
+// Using query expression syntax.
+var query = from word in words
+            group word.ToUpper() by word.Length into gr
+            orderby gr.Key
+            select new { Length = gr.Key, Words = gr };
+```
+```
+// Using method-based query syntax.
+var query2 = words.
+  GroupBy(w => w.Length, w => w.ToUpper()).
+  Select(g => new { Length = g.Key, Words = g }).
+  OrderBy(o => o.Length);
+```
+
+*Queries are executed not when they are created, but when they are iterated/enumerated through.*
+
+Type
+C# has a Type class which has various tools for reflection.
+For example:
+Type.GetMethod() will query whether a specific type has a method that you're looking for.
+```
+// Get the MethodInfo of the type that is called "Contains" and accepts a string as an argument.
+// MethodInfo is basically a reflection class containing various information about the method.
+MethodInfo info = Type.GetMethod("Contains", new[] { typeof(string) })
+```
+
+Delegate - This is basically std::function for C#
+Action - Delegate type that returns void
+Func - Delegate type that returns values
+
+By using Expressions, you can perform dynamic queries with LINQ.
+If you forgot try searching google for: Sorting IQueryable Dynamically
+NOTE: It is generally not good to use the type "dynamic" in C#
+
+```
+// Use a dictionary to map expressions to an enum
+private static readonly Dictionary<EnumSortPduHistoryBy, dynamic> OrderFunctions =
+	new Dictionary<EnumSortPduHistoryBy, dynamic>
+	{
+		{ EnumSortPduHistoryBy.ExerciseTimestamp, (Expression<Func<PDULogRow, DateTime>>)(x => x.ExerciseTimestamp) },
+		{ EnumSortPduHistoryBy.ScenarioTimestamp, (Expression<Func<PDULogRow, DateTime>>)(x => x.ScenarioTimestamp) }
+	};
+// Use the dictionary defined to dynamically decide which expression to use
+rows = Queryable.OrderBy(rows, OrderFunctions[(EnumSortPduHistoryBy)query.SortBy]);
+```
+
+Task.FromResult()
+The only time you would need to do this is when you are specifically implementating an interface that allows asynchronous callers but your implementation is synchronous.
+
+Mediatr
+This is a tool that is primarily used to cleanup dependency injection in constructors It aids in implementing CQRS (Command Query Responsibility Segregation) It is used to avoid direct dependencies between components (Like separating the API logic from the business logic)
+
+ASP.NET MVC
+A UrlRoutingModule receives the http request. It will then match the request with the corresponding route object (In AMD Services we are using controllers with attribute routing)
+
+Controllers are constructed when they are needed
+
+Pass by Value
+C# passes references of objects by value, by default. If you want to pass a copy of the value (pass it so it is immutable) you will need to implement a deep copy method:
+```
+private Clone() {
+	return new Object() {
+		// Perform deep copy here.
+		value1 = this.value1;
+		...
+	}
+}
+```
+
+Hosted vs Scoped Services
+A Hosted service is a singleton, except it's lifespan is between the web host is started and the web host shuts down. This allows you to implement specific start or shutdown behavior, such as terminate the connection. A scoped service is one that has a lifetime determined by its scope, such as an HTTP request and response. Scope is defined by the narrowest scope used, so if you have a singleton use scoped services, then those services will in effect be singletons.
+
+Async and Await Language-Level Constructs
+When doing asynchronous operations you DO want to have the asyncs going "all the way down". AWAIT is the big part of async operations. It's this keyword which allows processing to return to the caller instead of blocking.
+
+await
+await Task.WhenAny
+await Task.WhenAll
+await Task.Delay
+
+If you are doing parallel processing within async methods, you will see that you can't contain an "await" within a "lock" This is to prevent developers from hurting themselves with deadlocks because async coordinates across threads and lock works on a specific thread. In order to protect your data across multiple threads you must use a Semaphore. The popular option is to use SemaphoreSlim which is specific to an entire process.
+```
+SemaphoreSlim semaphore = new SemaphoreSlim();
+await semaphore.WaitAsync();
+try {
+	// Execute code
+}
+finally {
+	// THIS IS CRITICAL
+	semaphore.Release();
+}
+```
+
+Attributes
+Attributes are designed to associate predefined system information or user-defined custom information with a target element. This element can be almost any entity in the C# language, such as: Assembly, Class, Method, Constructor, Enum, Module, Return Value, etc.
+
+Attributes should be considered meta-data and provide "facts about the mechanisms". In other words, a property should be used to provide states to a digital MODEL of a concept or thing. By contrast, an attribute should provide descriptions or states about the MECHANISM we use to model.
+
+```
+[Serializable]
+public class Customer
+{
+	public int CreditCard { get; set; }
+}
+```
+
+In the above example, Customer is a MODEL representation of a customer at our business and CreditCard is a PROPERTY
+of Customer that models/represents the credit card number they use to pay for goods and services.
+Serializable, on the other hand, is an ATTRIBUTE of the public class Customer. It is not modeling or representing some
+real world property, but rather defining functional characteristics of the public class it is modifying.
+
+HTTP - RFC 7231
+Content-Type SHOULD be used whenever a message is sent with a payload body in order to drive parsing the message. Some content is syntactically identical but is processed in different ways, which introduces liabilities when the receiver is left to "figure out" how to parse the content. This is referred to as "content sniffing" which uses a best guess to determine how to parse information. This introduces a security liability, so it discouraged to enable "content sniffing" when you are receiving payloads.
+
+Content-Encoding
+This specifies a type of encoding applied to the payload, such as compression. This field only applies when the body is to be decoded just prior to "usage". If you are requesting information that you know is encoded and may or may not decode at another time this field is NOT applicable.
+
+Idempotent - The intended effect on the server of multiple identical requests is the same as the effect for a single request.
+
+Aggregate Initialization – If you use aggregate initialization, `TestStruct X = { 0… }`, the members will be initialized in order and any not explicitly initialized will use the empty initializer list equivalent (x{} is x with an empty initializer list). An empty initializer list performs value initialization (x() or new x() is value initialization). Basically what this statement is saying is "Initialize the first member of X to 0, then use the empty initializer list for all the other elements (Basically if we did X = {} or X{}). Furthermore, the empty initializer list performs value initialization. There are some instances where value initialization cannot be performed (such as references) so the syntax X = {0} is unnecessarily convoluted for default initializing an array.
 
 So what happened was the winapi CreateThread has a max limit based on the default stack size the OS will allocate to individual threads, this is essentially 2048 without reducing the default stack size. I couldn’t find anything saying exactly what happens when you exceed that. It seems like the program should crash, that’s what I would expect I think. Instead, it seems like it MAY be queuing the tasks up and getting to the threads when it can. I ran with AMD Services and I was getting the execution exactly as I suspected. So it seems to me, that the delay in closing threads caused by the timeout allows the number of threads to stack up and causes the issue.
 
