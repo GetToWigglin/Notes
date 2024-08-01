@@ -128,6 +128,29 @@ Web Based Mobile App - A mobile app that's based on a web application and not a 
 Web Apps/Native Apps/Hybrid Apps
 https://aws.amazon.com/compare/the-difference-between-web-apps-native-apps-and-hybrid-apps/
 
+## Frontend
+### Angular
+Angular seems to have everything you need already built in to it.
+It seems to be the go to framework for SPAs.
+ - Many built in features
+ - Support server side rendering
+ - Server side rendering is quick
+ - Uses TypeScript
+ - Enforces clear separation of concerns using the MVC pattern
+ - Good for SPAs and support scalability and maintainability
+
+### React
+Unlike Angular, this is a JS library designed for building UIs as opposed to a full framework. It's centered around reusable components be combined in complex ways. It uses a virtual Document Object Model (DOM), which acts as an in-memory representation of the actual web page. This allows React to efficiently "react" to any changes and minimize the overhead in updating components which significantly improves the performance for dynamic UIs. ReactJS is also known for being easier to learn and having faster development cycles.
+ - Declarative views makes debugging easier
+ - Reduced development time and increased productivity
+ - More predictable and reusable code
+ - Simple migration between several versions
+ - Good for mobile development as well using React Native
+ - Good for dynamic user interfaces with frequently changing data
+
+### Mantine
+This seems to be a repository for pre-made web site components.
+
 ## C#
 Classes in C# are considered "reference" types. When instantiating a class, it must be instantiated with the "new" keyword or else it will be initialized to "nullptr" basically. 
 
