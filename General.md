@@ -4,3 +4,4 @@
 
 ## Warhammer Mods
 Factional Favored Regiments
+Bad Legendary Characters
