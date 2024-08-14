@@ -3,5 +3,5 @@
 ## TODO
 
 ## Warhammer Mods
-Factional Favored Regiments
-Bad Legendary Characters
+ - Factional Favored Regiments
+ - Bad Legendary Characters
