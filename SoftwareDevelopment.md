@@ -148,8 +148,9 @@ Unlike Angular, this is a JS library designed for building UIs as opposed to a f
  - Good for mobile development as well using React Native
  - Good for dynamic user interfaces with frequently changing data
 
-### Mantine
-This seems to be a repository for pre-made web site components.
+### UI Libraries
+ - [Mantine](https://mantine.dev/) (React Components)
+ - [uiverse.io](https://uiverse.io/) (HTML and CSS, but can be exported to React)
 
 ## C#
 Classes in C# are considered "reference" types. When instantiating a class, it must be instantiated with the "new" keyword or else it will be initialized to "nullptr" basically. 
