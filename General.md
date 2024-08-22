@@ -5,3 +5,4 @@
 ## Warhammer Mods
  - Factional Favored Regiments
  - Bad Legendary Characters
+ - Murranji's Great Bastion Expansion Mod
