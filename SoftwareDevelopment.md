@@ -152,6 +152,12 @@ Unlike Angular, this is a JS library designed for building UIs as opposed to a f
  - [Mantine](https://mantine.dev/) (React Components)
  - [uiverse.io](https://uiverse.io/) (HTML and CSS, but can be exported to React)
 
+## DotNet AspNet
+
+`launchSettings.json` provides environment configuration for ASP.NET on local machines.
+`commandName` is used to determine whether it runs using IIS, IISExpress, or Kestrel Web Server
+
+
 ## C#
 Classes in C# are considered "reference" types. When instantiating a class, it must be instantiated with the "new" keyword or else it will be initialized to "nullptr" basically. 
 
