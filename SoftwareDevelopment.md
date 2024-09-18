@@ -157,6 +157,21 @@ Unlike Angular, this is a JS library designed for building UIs as opposed to a f
 `launchSettings.json` provides environment configuration for ASP.NET on local machines.
 `commandName` is used to determine whether it runs using IIS, IISExpress, or Kestrel Web Server
 
+.Net Regex Source Generators
+DotNet provides functionality to optimize and improve regex pattern matching by using source generation.
+```
+[GeneratedRegex("abc|def", RegexOptions.IgnoreCase, "en-US")]
+private static partial Regex AbcOrDefGeneratedRegex();
+
+private static void EvaluateText(string text)
+{
+    if (AbcOrDefGeneratedRegex().IsMatch(text))
+    {
+        // Take action with matching text
+    }
+}
+```
+The above code will generate source code for the matching regex and optimize it internally. 
 
 ## C#
 Classes in C# are considered "reference" types. When instantiating a class, it must be instantiated with the "new" keyword or else it will be initialized to "nullptr" basically. 
